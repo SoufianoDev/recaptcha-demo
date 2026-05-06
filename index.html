@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>reCAPTCHA Only</title>
+    <title>reCAPTCHA with Border</title>
     <style>
         body {
             display: flex;
@@ -11,15 +11,27 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: transparent;
+            background-color: #f9f9f9;
+        }
+
+        /* The custom border container for the checkbox */
+        .captcha-container {
+            display: inline-block;
+            padding: 12px;
+            border: 2px solid #4285f4; /* Google Blue border */
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(66, 133, 244, 0.2); /* Soft blue glow */
         }
     </style>
 </head>
 <body>
 
     <form action="?" method="POST">
-        <!-- Updated with your specific Site Key from the image -->
-        <div class="g-recaptcha" data-sitekey="6LdCfNssAAAAAHEB10qc_j-V22zSOpHahTkdRba5"></div>
+        <div class="captcha-container">
+            <!-- The visible "I'm not a robot" checkbox -->
+            <div class="g-recaptcha" data-sitekey="6LdCfNssAAAAAHEB10qc_j-V22zSOpHahTkdRba5"></div>
+        </div>
     </form>
 
     <script src='https://www.google.com/recaptcha/api.js'></script>
