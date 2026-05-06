@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>reCAPTCHA v2 Demo - Soufianodev</title>
+    <title>reCAPTCHA v2 Demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://soufianodev.github.io/Toast-JS/libs/js/v2.1.0-beta/Toast.js"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .toast-notification {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
     <div id="toast-notification" class="toast-notification"></div>
 
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden w-full max-w-md border border-gray-100">
         
-        <div class="bg-indigo-600 p-8 text-center relative overflow-hidden">
+        <div class="bg-indigo-600 pchoosed-8 text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                 <svg class="w-64 h-64 -mt-16 -ml-16" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                     <path fill="#FFFFFF" d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.6,-46.6C91.4,-34.1,98,-19.2,95.8,-5.3C93.6,8.6,82.6,21.5,72.1,32.6C61.6,43.7,51.6,53,40.4,60.8C29.2,68.6,16.8,74.9,2.9,72.6C-11,70.3,-26.4,59.4,-38.3,50.4C-50.2,41.4,-58.6,34.3,-66.3,24.8C-74,15.3,-81,3.4,-79.8,-8.2C-78.6,-19.8,-69.2,-31.1,-58.6,-39.8C-48,-48.5,-36.2,-54.6,-24.2,-63.5C-12.2,-72.4,0.4,-84.1,14.1,-86.1C27.8,-88.1,42.7,-80.4,44.7,-76.4Z" transform="translate(100 100)" />
@@ -31,8 +41,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                 </div>
-                <h1 class="text-2xl font-bold text-white tracking-tight">reCAPTCHA Demo</h1>
-                <p class="text-indigo-100 mt-1 text-sm font-medium">Powered by Google</p>
+                <h1 class="text-2xl font-bold text-white tracking-tight">reCAPTCHA v2 Demo</h1>
+                <p class="text-indigo-100 mt-1 text-sm font-medium">reCAPTCHA v2 Verification</p>
             </div>
         </div>
 
@@ -57,7 +67,7 @@
 
                 <button type="submit" id="submitBtn" disabled
                     class="w-full py-3.5 px-4 rounded-xl bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/30 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-indigo-600 shadow-lg shadow-indigo-500/30">
-                    Submit Verification
+                    Verify & Continue
                 </button>
             </form>
         </div>
@@ -74,89 +84,61 @@
         let captchaToken = null;
         const submitBtn = document.getElementById('submitBtn');
 
-        function onCaptchaSuccess(token) {
+        const successIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMxMGI5ODEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMjIgMTEuMDhWMTJhMTAgMTAgMCAxIDEtNS45My05LjE0Ii8+PHBvbHlsaW5lIHBvaW50cz0iMjIgNCAxMiAxNC4wMSA5IDExLjAxIi8+PC9zdmc+';
+        const warningIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNTllMGIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTAuMjkgMy44NkwxLjgyIDE4YTIgMiAwIDAgMCAxLjcxIDNoMTYuOTRhMiAyIDAgMCAwIDEuNzEtM0wxMy43MSAzLjg2YTIgMiAwIDAgMC0zLjQyIDB6Ii8+PGxpbmUgeDE9IjEyIiB5MT0iOSIgeDI9IjEyIiB5Mj0iMTMiLz48bGluZSB4MT0iMTIiIHkxPSIxNyIgeDI9IjEyLjAxIiB5Mj0iMTciLz48L3N2Zz4=';
+        const errorIcon = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNlZjQ0NDQiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxsaW5lIHgxPSIxNSIgeTE9IjkiIHgyPSI5IiB5Mj0iMTUiLz48bGluZSB4MT0iOSIgeTE9IjkiIHgyPSIxNSIgeTI9IjE1Ii8+PC9zdmc+';
+
+        function showToast(type, message) {
+            if (!window.Toast) return;
+
+            let icon = errorIcon;
+            let border = '4px solid #ef4444';
+
+            if (type === 'success') {
+                icon = successIcon;
+                border = '4px solid #10b981';
+            } else if (type === 'warning') {
+                icon = warningIcon;
+                border = '4px solid #f59e0b';
+            }
+
+            const toast = Toast.makeText(document.body, message, type === 'error' ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+            toast.setStyle({
+                background: '#ffffff',
+                color: '#111827',
+                borderRadius: '12px',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                borderLeft: border,
+                padding: '14px 20px',
+                fontSize: '14px',
+                fontWeight: '500',
+                fontFamily: "'Inter', sans-serif"
+            })
+            .setIcon(icon)
+            .setPosition(Toast.POSITION_TOP_CENTER)
+            .setAnimation(Toast.SLIDE_IN_TOP, Toast.FADE_OUT)
+            .show();
+        }
+
+        window.onCaptchaSuccess = function(token) {
             captchaToken = token;
             submitBtn.disabled = false;
             submitBtn.classList.remove('opacity-40');
-            
-            if (window.Toast) {
-                const toast = Toast.makeText(
-                    document.body,
-                    'Verification Complete! You can now submit.',
-                    Toast.LENGTH_SHORT
-                );
-                toast.setStyle({
-                    background: 'linear-gradient(135deg, #10b981, #059669)',
-                    color: '#fff',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 25px rgba(16, 185, 129, 0.3)',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    padding: '14px 20px',
-                    borderLeft: '4px solid #047857'
-                })
-                .setIcon("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='%23fff'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E")
-                .setPosition(Toast.POSITION_TOP_CENTER)
-                .setAnimation(Toast.SLIDE_IN_TOP, Toast.FADE_OUT)
-                .show();
-            }
-        }
+            showToast('success', 'Verification successful! You may proceed.');
+        };
 
-        function onCaptchaExpired() {
+        window.onCaptchaExpired = function() {
             captchaToken = null;
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-40');
-            
-            if (window.Toast) {
-                const toast = Toast.makeText(
-                    document.body,
-                    'Verification Expired. Please check the box again.',
-                    Toast.LENGTH_SHORT
-                );
-                toast.setStyle({
-                    background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                    color: '#fff',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 25px rgba(245, 158, 11, 0.3)',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    padding: '14px 20px',
-                    borderLeft: '4px solid #b45309'
-                })
-                .setIcon("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='%23fff'%3E%3Cpath fill-rule='evenodd' d='M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z' clip-rule='evenodd'/%3E%3C/svg%3E")
-                .setPosition(Toast.POSITION_TOP_CENTER)
-                .setAnimation(Toast.SLIDE_IN_TOP, Toast.FADE_OUT)
-                .show();
-            }
-        }
+            showToast('warning', 'Verification expired. Please try again.');
+        };
 
         function handleSubmit(e) {
             e.preventDefault();
             
             if (!captchaToken) {
-                if (window.Toast) {
-                    const toast = Toast.makeText(
-                        document.body,
-                        'Please complete the captcha first!',
-                        Toast.LENGTH_SHORT
-                    );
-                    toast.setStyle({
-                        background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                        color: '#fff',
-                        borderRadius: '12px',
-                        boxShadow: '0 8px 25px rgba(239, 68, 68, 0.3)',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        padding: '14px 20px',
-                        borderLeft: '4px solid #991b1b'
-                    })
-                    .setIcon("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='%23fff'%3E%3Cpath fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' clip-rule='evenodd'/%3E%3C/svg%3E")
-                    .setPosition(Toast.POSITION_TOP_CENTER)
-                    .setAnimation(Toast.SLIDE_IN_TOP, Toast.FADE_OUT)
-                    .show();
-                } else {
-                    alert('Please complete the captcha first!');
-                }
+                showToast('error', 'Please complete the captcha first!');
                 return;
             }
 
@@ -167,34 +149,13 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Sending...
+                Verifying...
             `;
 
             setTimeout(() => {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-                
-                if (window.Toast) {
-                    const toast = Toast.makeText(
-                        document.body,
-                        'Success! Form submitted securely.',
-                        Toast.LENGTH_SHORT
-                    );
-                    toast.setStyle({
-                        background: 'linear-gradient(135deg, #10b981, #059669)',
-                        color: '#fff',
-                        borderRadius: '12px',
-                        boxShadow: '0 8px 25px rgba(16, 185, 129, 0.3)',
-                        fontSize: '14px',
-                        fontWeight: '500',
-                        padding: '14px 20px',
-                        borderLeft: '4px solid #047857'
-                    })
-                    .setIcon("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='%23fff'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E")
-                    .setPosition(Toast.POSITION_TOP_CENTER)
-                    .setAnimation(Toast.SLIDE_IN_TOP, Toast.FADE_OUT)
-                    .show();
-                }
+                showToast('success', 'Identity verified successfully!');
                 
                 document.getElementById('demoForm').reset();
                 grecaptcha.reset();
