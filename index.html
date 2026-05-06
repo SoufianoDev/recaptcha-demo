@@ -1,9 +1,9 @@
 <!DOCTYPE HTML>
-<html lang="en_US">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>reCAPTCHA with Border</title>
+    <title>reCAPTCHA v2 Demo</title>
     <style>
         body {
             display: flex;
@@ -12,16 +12,25 @@
             height: 100vh;
             margin: 0;
             background-color: #f9f9f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* The custom border container for the checkbox */
+        /* Outer border around the captcha */
         .captcha-container {
             display: inline-block;
-            padding: 12px;
-            border: 2px solid #4285f4; /* Google Blue border */
+            padding: 15px;
+            border: 2px solid #4285f4; /* Google Blue */
             border-radius: 8px;
             background-color: #ffffff;
-            box-shadow: 0 0 15px rgba(66, 133, 244, 0.2); /* Soft blue glow */
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.15); /* Soft blue glow */
+            text-align: center;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -29,11 +38,13 @@
 
     <form action="?" method="POST">
         <div class="captcha-container">
-            <!-- The visible "I'm not a robot" checkbox -->
-            <div class="g-recaptcha" data-sitekey="6LdCfNssAAAAAHEB10qc_j-V22zSOpHahTkdRba5"></div>
+            <div class="info-text">reCAPTCHA v2 Verification</div>
+            <!-- Using your verified v2 Site Key -->
+            <div class="g-recaptcha" data-sitekey="6LdNg9ssAAAAAG1VhB-ogfFhXZqtjt_la8wwjzsH"></div>
         </div>
     </form>
 
+    <!-- Official Google reCAPTCHA API -->
     <script src='https://www.google.com/recaptcha/api.js'></script>
 
 </body>
